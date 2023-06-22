@@ -1,0 +1,180 @@
+.APP {
+  background-color: #fff;
+}
+
+.site-layout .wrapper {
+  margin: 10px 0 0 0;
+  background-color: #fff;
+  width: 92%;
+}
+
+.site-layout .wrapper .top {
+  text-align: center;
+  font-family: Microsoft YaHei UI-Bold, Microsoft YaHei UI;
+}
+
+.site-layout .wrapper .top h1 {
+  margin: 20px auto 16px;
+  height: 24px;
+  font-size: 24px;
+
+  font-weight: 700;
+  color: #272e3b;
+  line-height: 24px;
+  letter-spacing: 1px;
+}
+
+.site-layout .wrapper .top h2 {
+  margin: 0 auto 20px;
+  height: 14px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #555c78;
+  line-height: 14px;
+}
+
+.site-layout .wrapper .box {
+  position: relative;
+  height: auto;
+  padding: 20px 20px 0;
+  background: #fafaff;
+  border-radius: 8px 8px 8px 8px;
+  opacity: 1;
+  margin-bottom: 20px;
+  padding-bottom:100px;
+}
+
+.site-layout .wrapper .box .area-title {
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 700;
+  color: #272e3b;
+  line-height: 1;
+}
+
+.site-layout .wrapper .box .text-box {
+  width: 100%;
+  position: relative;
+  margin: 14px auto 20px;
+  height: 160px;
+}
+
+.site-layout .example {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-family: Microsoft YaHei UI-Regular, Microsoft YaHei UI;
+  font-weight: 400;
+  color: #8991af;
+  line-height: 16px;
+}
+
+.site-layout .example .example-title {
+  min-width: 84px;
+  line-height: 28px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.site-layout .example .example-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 20px;
+}
+
+.site-layout .example .example-list button {
+  height: 28px;
+  padding: 0 20px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #6a7bff;
+  color: #6a7bff;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.site-layout .seeting {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.site-layout .custome {
+  margin-top: 10px;
+  width: 100%;
+  /* display: flex; */
+  /* flex-direction: vertical; */
+}
+
+.site-layout .custome .anticon svg {
+  /* display: flex; */
+  margin: auto 8px;
+  align-items: center;
+  justify-content: center;
+  color: #9da9b9;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-weight: 400;
+}
+
+.site-layout .scal {
+  margin-bottom: 20px;
+  height: 44px;
+  /* display: flex; */
+  align-items: center;
+}
+
+.site-layout .scal .span-box {
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px 4px 4px 4px;
+  opacity: 1;
+  border: 1px solid #8991af;
+  font-size: 12px;
+  display: flex;
+}
+
+.site-layout .scal .first-span {
+  width: 24px;
+  height: 24px;
+}
+
+.site-layout .scal .second-span {
+  width: 46px;
+  height: 24px;
+}
+
+.site-layout .scal .third-span {
+  width: 32px;
+  height: 44px;
+}
+
+.site-layout .scal .fourth-span {
+  width: 39px;
+  height: 29px;
+}
+
+.site-layout .scal .firth-span {
+  width: 29px;
+  height: 39px;
+}
+
+.setting .reference {
+  margin-left: 15px;
+}
+
+.setting .reference .reference-file {
+  padding-left: 30px;
+  padding-top: 5px;
+}
+
+.site-layout .wrapper .box .generate {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}

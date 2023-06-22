@@ -1,0 +1,16 @@
+.logo {
+  flex: 1;
+}
+
+.mj-menu {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  color: #333;
+}
+
+.login-register {
+  flex: 1;
+  text-align: right;
+}
