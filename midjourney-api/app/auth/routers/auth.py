@@ -18,9 +18,3 @@ router = APIRouter(
 async def login_access_token(request: UserLoginRequest):
     data = await auth_service.login_access_login(request)
     return json_response(data=data)
-
-
-# {
-#   "phone": "17612167260",
-#   "password": "17612167260@t"
-# }

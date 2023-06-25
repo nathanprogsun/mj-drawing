@@ -88,7 +88,6 @@ def setup_exception_handler(app: FastAPI):
         msg = []
         for pydantic_error in exc.errors():
             msg.append(extract_exception(pydantic_error))
-        print("msg-->", msg)
         traceback.print_exc()
 
         return json_response(

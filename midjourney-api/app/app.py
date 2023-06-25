@@ -6,7 +6,6 @@ from app.utils.db import setup_db
 from app.utils.exception_handler import setup_exception_handler
 from app.utils.logger import setup_logger
 from app.utils.stream import RedisStream
-from app.utils.task import batch_update_task_status
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
@@ -48,16 +47,12 @@ setup_db(
 redis_stream = RedisStream(settings.REDIS_URL)
 
 
-class RedisBackend(object):
-    pass
-
-
 @app.on_event("startup")
 async def startup() -> None:
     if settings.REDIS_TESTING:
         return
 
-    asyncio.create_task(redis_stream.consume(batch_update_task_status))
+    # asyncio.create_task(redis_stream.consume(batch_update_task_status))
 
 
 @app.on_event("shutdown")

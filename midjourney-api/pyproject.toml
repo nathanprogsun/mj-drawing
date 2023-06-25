@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "midjourney-api"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["jonathan <geely08@163.com>"]
 readme = "README.md"
@@ -22,6 +22,7 @@ passlib = "^1.7.4"
 alembic = "^1.11.1"
 aiomysql = "^0.2.0"
 bcrypt = "^4.0.1"
+python-multipart = "^0.0.6"
 
 
 [build-system]

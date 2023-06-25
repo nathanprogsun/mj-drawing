@@ -24,10 +24,12 @@ class Settings(BaseSettings):
     REDIS_BACKEND: str
     REDIS_TESTING: bool
     REDIS_URL: str
+    REDIS_HOST: str
+    REDIS_PORT: str
     APP_CACHE_EXPIRE_IN_SECONDS: int = 3600
 
     # CORS
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     # tasks
     TASK_TYPES_WHITELIST: List[int] = [3]
@@ -37,6 +39,14 @@ class Settings(BaseSettings):
     APPLICATION_MODULES: List[str] = [
         "app.auth.models.user",
     ]
+
+    # discord
+    DISCORD_USER_TOKEN: str
+    DISCORD_BOT_TOKEN: str
+    DISCORD_GUILD_ID: str
+    DISCORD_CHANNEL_ID: str
+    DISCORD_APPLICATION_ID: str
+    DISCORD_SESSION_ID: str
 
 
 settings = Settings(_env_file=".env")  # type: ignore

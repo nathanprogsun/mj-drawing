@@ -36,6 +36,7 @@ PyMySQL==1.0.3
 pypika-tortoise==0.1.6
 python-dotenv==1.0.0
 python-jose==3.3.0
+python-multipart==0.0.6
 pytz==2023.3
 PyYAML==6.0
 redis==4.5.5
