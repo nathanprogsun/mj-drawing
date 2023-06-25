@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1 align="center">ChatGPT-Midjourney</h1>
+<h1 align="center">mj-drawing</h1>
 
 中文 | [English](./README_EN.md)
 
