@@ -12,10 +12,11 @@ import {
   Upload,
   Modal,
   Spin,
+  message,
 } from "antd";
 import { BrowserRouter as Router } from "react-router-dom";
 import { QuestionCircleOutlined, PlusOutlined } from "@ant-design/icons";
-
+import axios from "axios";
 import MJHeader from "./pages/MJHeader";
 
 import "./App.css";
@@ -29,19 +30,21 @@ class App extends React.Component {
     super(props);
     this.state = {
       mode: "custom",
-      textMatching: 7.5,
-      imageProcessing: 50,
+      textMatching: 0.5,
+      imageProcessing: 1,
       imageUrl: null,
       mjLoading: true,
       mjImage: null,
       mjErr: null,
       modalVisible: false,
       exampleList: [
-        "赛博朋克风格的城市",
-        "用日漫风格画一个金发少女",
-        "黑白线条画风格的长城",
+        "flying birds over the sea ",
+        "vintage travel painting bohol china",
+        "sketching cat looking at a dandelion flower with herbal colored",
       ],
       textValue: "",
+      scale: "SCALE_1_1",
+      triggerId: null,
     };
   }
 
@@ -57,39 +60,114 @@ class App extends React.Component {
     this.setState({ imageProcessing: value });
   };
 
-  handleUpload = (info) => {
-    console.log(info.file);
-    // 处理文件上传逻辑
-
-    // 获取上传的文件对象
-    const file = info.file.originFileObj;
-
-    // 创建临时的图片 URL
-    const imageUrl = URL.createObjectURL(file);
-
-    // 更新组件状态
-    this.setState({ imageUrl });
+  handleScaleChange = (e) => {
+    this.setState({
+      scale: e.target.value,
+    });
   };
 
-  handleBtnClick = () => {
-    this.setState({ modalVisible: true });
+  handleUpload = async (info) => {
+    const { status, response } = info.file;
+    if (status === "done") {
+      console.info(response);
+      const code = response.code;
+      if (code === 0) {
+        const imageUrl = response.data.file_url;
+        this.setState({ imageUrl });
+        message.success("Upload success");
+      } else {
+        message.error(`Upload fail: ${response.message}`);
+      }
+    }
+  };
 
-    // 模拟请求图片生成
-    setTimeout(() => {
-      // 假设请求成功，获得图片 URL
-      const mjImage = "https://example.com/image.jpg";
+  pollForResult = (triggerId) => {
+    console.log("start pollForResult--->", triggerId);
+    // 异常，请求并没有发送
+    const interval = setInterval(() => {
+      axios
+        .get(`http://0.0.0.0:9999/api/v1/drawing/result/${triggerId}`)
+        .then((resultResponse) => {
+          const resp = resultResponse.data;
+          console.log("(fetch result)resp-->", resp);
 
-      this.setState({
-        mjImage: mjImage,
-        mjErr: null,
-        mjLoading: false,
-      });
+          if (resp.code === 0) {
+            const { trigger_status, file_url, trigger_content } = resp.data;
+            if (trigger_status === 2) {
+              this.setState({
+                mjImage: file_url,
+                mjErr: null,
+                mjLoading: false,
+              });
+              clearInterval(interval);
+              message.info("Generate success");
+            }
+            if (trigger_status === -1) {
+              this.setState({
+                mjImage: null,
+                mjErr: trigger_content,
+              });
+              clearInterval(interval);
+              this.handleModalCancel();
+            }
+          }
+        })
+        .catch((resultError) => {
+          console.error("fetch result->", resultError);
+          clearInterval(interval);
+          this.handleModalCancel();
+        });
     }, 1000);
   };
 
+  handleBtnClick = () => {
+    console.info("mode->", this.state.mode);
+    console.info("textMatching->", this.state.textMatching);
+    console.info("imageProcessing->", this.state.imageProcessing);
+    console.info("imageUrl->", this.state.imageUrl);
+    console.info("textValue->", this.state.textValue);
+
+    const modelType = this.state.mode === "custom" ? 1 : 0;
+
+    const requestBody = {
+      description: this.state.textValue,
+      model: {
+        model_type: modelType,
+        text_match: this.state.textMatching,
+        img_processing: this.state.imageProcessing,
+      },
+      scale_category: this.state.scale,
+      reference_url: this.state.imageUrl,
+    };
+
+    axios
+      .post(`http://0.0.0.0:9999/api/v1/drawing`, requestBody)
+      .then((response) => {
+        const resp = response.data;
+        console.info("(drawing)resp->", resp);
+        if (resp.code === 0) {
+          const triggerId = resp.data.trigger_id;
+          console.info("triggerId->", triggerId);
+          this.setState({ triggerId: triggerId, modalVisible: true });
+          console.info("triggerId(from state)-->", this.state.triggerId);
+          this.pollForResult(triggerId);
+        } else {
+          message.error(response.message);
+        }
+      })
+      .catch((error) => {
+        console.log("(drawing)error--->", error.message);
+        message.error(error.message);
+      });
+  };
+
   handleModalCancel = () => {
-    // 关闭弹窗
-    this.setState({ modalVisible: false });
+    this.setState({
+      modalVisible: false,
+      mjImage: null,
+      mjErr: null,
+      mjLoading: false,
+    });
   };
 
   handleExampleButtonClick = (content) => {
@@ -115,6 +193,7 @@ class App extends React.Component {
       modalVisible,
       exampleList,
       textValue,
+      triggerId,
     } = this.state;
 
     return (
@@ -202,9 +281,9 @@ class App extends React.Component {
                                   <Col span={5}>文本匹配程度</Col>
                                   <Col span={14}>
                                     <Slider
-                                      min={0}
-                                      max={10}
-                                      step={0.1}
+                                      min={0.25}
+                                      max={1}
+                                      step={0.25}
                                       value={textMatching}
                                       onChange={this.handleTextMatchingChange}
                                     />
@@ -226,9 +305,9 @@ class App extends React.Component {
                                   <Col span={5}>图像处理程度</Col>
                                   <Col span={14}>
                                     <Slider
-                                      min={0}
-                                      max={100}
-                                      step={1}
+                                      min={0.5}
+                                      max={2}
+                                      step={0.1}
                                       value={imageProcessing}
                                       onChange={
                                         this.handleImageProcessingChange
@@ -238,8 +317,8 @@ class App extends React.Component {
                                   <Col span={4} style={{ textAlign: "center" }}>
                                     <span>{imageProcessing}</span>
                                     <Tooltip
-                                      title={`数值越大，效果图与您上传的参考图相似度越低；
-                                        数值越小，效果图与您上传的参考图相似度越高；`}
+                                      title={`数值越大，效果图与您上传的参考图相似度越高；
+                                        数值越小，效果图与您上传的参考图相似度越低；`}
                                     >
                                       <QuestionCircleOutlined
                                       // style={{ marginLeft: "4px" }}
@@ -254,8 +333,9 @@ class App extends React.Component {
                             <h1>画布比例</h1>
                             <Group
                               name="scal-group"
-                              defaultValue={1}
+                              defaultValue={this.state.scale}
                               size="middle"
+                              onChange={this.handleScaleChange}
                               style={{
                                 display: "flex",
                                 flexDirection: "row",
@@ -263,7 +343,7 @@ class App extends React.Component {
                               }}
                             >
                               <Radio
-                                value={1}
+                                value={"SCALE_1_1"}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -273,7 +353,7 @@ class App extends React.Component {
                                 <span className="span-box first-span">1:1</span>
                               </Radio>
                               <Radio
-                                value={2}
+                                value={"SCALE_16_9"}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -284,7 +364,7 @@ class App extends React.Component {
                                 </span>
                               </Radio>
                               <Radio
-                                value={3}
+                                value={"SCALE_9_16"}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -295,7 +375,7 @@ class App extends React.Component {
                                 </span>
                               </Radio>
                               <Radio
-                                value={4}
+                                value={"SCALE_4_3"}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -306,7 +386,7 @@ class App extends React.Component {
                                 </span>
                               </Radio>
                               <Radio
-                                value={5}
+                                value={"SCALE_3_4"}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -327,6 +407,9 @@ class App extends React.Component {
                               listType="picture-card"
                               showUploadList={false}
                               className="upload-file"
+                              action={
+                                "http://0.0.0.0:9999/api/v1/drawing/upload"
+                              }
                             >
                               {imageUrl ? (
                                 <img
@@ -361,6 +444,9 @@ class App extends React.Component {
                       open={modalVisible}
                       onCancel={this.handleModalCancel}
                       footer={null}
+                      title={triggerId}
+                      width={800}
+                      height={800}
                     >
                       {mjLoading ? (
                         <Spin size="large" tip="正在加载..." />
