@@ -48,7 +48,7 @@ python bot.py
 
 
 ## 计划功能
-- [ ] 支持websocket返回
+- [ ] 支持websocket通信
 - [ ] 绘图进度百分比
 - [ ] 前端页面优化:风格选择/场景切换/图片下载
 - [ ] docker一键部署
