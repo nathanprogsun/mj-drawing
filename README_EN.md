@@ -48,7 +48,7 @@ python bot.py
 
 
 ## More features
-- [ ] support websocket return
+- [ ] support websocket
 - [ ] Drawing progress percentage
 - [ ] Front-end page optimization: style selection/scene switching/picture download
 
